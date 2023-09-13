@@ -14,7 +14,7 @@ public static class StatusExtension
         return status switch
         {
             Status.Pending => "Pending",
-            Status.Inprogress => "Inprogress"
+            Status.Inprogress => "Inprogress",
             Status.Completed => "Completed"
         };
     }
