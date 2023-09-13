@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Dtos.Response;
 using TaskSync.Domain.Entities;
@@ -13,11 +14,17 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IJwtService _jwtAuthenticate;
-    public AuthService(UserManager<ApplicationUser> userManager, IJwtService jwtAuthenticate, RoleManager<IdentityRole> roleManager)
+    private readonly IMapper _mapper;
+    public AuthService(
+        UserManager<ApplicationUser> userManager, 
+        IJwtService jwtAuthenticate, 
+        RoleManager<IdentityRole> roleManager,
+        IMapper mapper)
     {
         _userManager = userManager;
         _jwtAuthenticate = jwtAuthenticate;
         _roleManager = roleManager;
+        _mapper = mapper;
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
@@ -53,15 +60,7 @@ public class AuthService : IAuthService
         if (existingUser != null)
             throw new InvalidOperationException($"User with email: {request.Email} already exist");
 
-        ApplicationUser user = new()
-        {
-            Firstname = request.Firstname,
-            Middlename = request.Middlename,
-            UserName = request.Username,
-            Lastname = request.Lastname,
-            Email = request.Email,
-            UserTypeId = request.UserTypeId,
-        };
+        ApplicationUser user = _mapper.Map<ApplicationUser>(request);
 
         IdentityResult result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
