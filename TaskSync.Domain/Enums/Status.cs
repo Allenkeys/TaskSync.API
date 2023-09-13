@@ -6,3 +6,16 @@ public enum Status
     Inprogress,
     Completed
 }
+
+public static class StatusExtension
+{
+    public static string? ToStringValue(this Status status)
+    {
+        return status switch
+        {
+            Status.Pending => "Pending",
+            Status.Inprogress => "Inprogress"
+            Status.Completed => "Completed"
+        };
+    }
+}
