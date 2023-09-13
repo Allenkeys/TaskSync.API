@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TaskSync.Application\TaskSync.Application.csproj" />
+  </ItemGroup>
+
 </Project>
