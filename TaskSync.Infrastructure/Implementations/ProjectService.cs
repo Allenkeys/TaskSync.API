@@ -1,31 +1,92 @@
-﻿using TaskSync.Infrastructure.Interfaces;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using TaskSync.Application.Repository;
+using TaskSync.Domain.Dtos.Request;
+using TaskSync.Domain.Entities;
+using TaskSync.Infrastructure.Interfaces;
 
 namespace TaskSync.Infrastructure.Implementations;
 
-internal class ProjectService : IProjectSerrvice
+public class ProjectService : IProjectService
 {
-    public Task Create()
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRepository<Project> _projectRepo;
+    private readonly UserManager<ApplicationUser> _userManager;
+    public ProjectService(IMapper mapper, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
     {
-        throw new NotImplementedException();
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+        _projectRepo = unitOfWork.GetRepository<Project>();
+        _userManager = userManager;
+
+    }
+    public async Task<string> CreateProject(string userId, CreateProjectRequest request)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        var user = _userManager.FindByIdAsync(userId);
+        if (user == null) throw new ArgumentException("User not found");
+
+        var project = _mapper.Map<Project>(request);
+        project.UserId = userId;
+        
+        var result = _projectRepo.Create(project);
+
+        return $"{result.Name} has been created successfully";
+
     }
 
-    public Task Delete()
+    public async Task DeleteProject(string userId, int projectId)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId);
+        if (user == null) throw new ArgumentException("User not found");
+
+        var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId) 
+            && x.UserId.Equals(userId), trackChanges: true);
+
+        if (existingProject == null) throw new ArgumentException("Not Found!");
+
+        _projectRepo.Delete(existingProject);
     }
 
-    public Task Get(string id)
+    public async Task<IEnumerable<Project>> GetAllProjectsAsync(string userId)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId);
+        if (user == null) throw new ArgumentException("User not found");
+
+        var existingProjects = _projectRepo.FindBy(x => x.UserId.Equals(userId) 
+            && x.UserId.Equals(userId), trackChanges: false);
+
+        if (existingProjects == null)
+            return Enumerable.Empty<Project>();
+
+        return existingProjects;
     }
 
-    public Task GetAllAsync()
+    public async Task<Project> GetProject(string userId, int projectId)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId);
+        if (user == null) throw new ArgumentException("User not found");
+
+        var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId) 
+            && x.UserId.Equals(userId), trackChanges: false);
+
+        if (existingProject == null) throw new ArgumentException("Not Found!");
+
+        return existingProject;
     }
 
-    public Task Update()
+    public async Task UpdateProject(string userId, int projectId, UpdateProjectRequest request)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId);
+        if (user == null) throw new ArgumentException("User not found");
+
+        var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId)
+            && x.UserId.Equals(userId), trackChanges: true);
+
+        if (existingProject == null) throw new ArgumentException("Not Found!");
+
+        _mapper.Map(request, existingProject);
+        _projectRepo.Update(existingProject);
     }
 }

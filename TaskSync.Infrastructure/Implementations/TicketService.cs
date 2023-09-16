@@ -4,27 +4,27 @@ namespace TaskSync.Infrastructure.Implementations;
 
 public class TicketService : ITicketService
 {
-    public Task Create()
+    public Task CreateProject()
     {
         throw new NotImplementedException();
     }
 
-    public Task Delete()
+    public Task DeleteProject(string id)
     {
         throw new NotImplementedException();
     }
 
-    public Task Get(string id)
+    public Task GetAllProjectsAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task GetAllAsync()
+    public Task GetProject(string id)
     {
         throw new NotImplementedException();
     }
 
-    public Task Update()
+    public Task UpdateProject(string id)
     {
         throw new NotImplementedException();
     }

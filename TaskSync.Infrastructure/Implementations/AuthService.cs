@@ -12,13 +12,13 @@ namespace TaskSync.Infrastructure.Implementations;
 public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly IJwtService _jwtAuthenticate;
     private readonly IMapper _mapper;
     public AuthService(
         UserManager<ApplicationUser> userManager, 
         IJwtService jwtAuthenticate, 
-        RoleManager<IdentityRole> roleManager,
+        RoleManager<ApplicationRole> roleManager,
         IMapper mapper)
     {
         _userManager = userManager;
