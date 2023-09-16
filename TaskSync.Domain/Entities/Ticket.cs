@@ -10,5 +10,6 @@ public class Ticket : BaseEntity
     public DateTime DueDate { get; set; }
     public Priority Priority { get; set; } = Priority.Low;
     public Status Status { get; set; } = Status.Pending;
+    public int ProjectId { get; set; }
     public Project Project { get; set; }
 }
