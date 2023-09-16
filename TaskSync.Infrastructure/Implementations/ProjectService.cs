@@ -4,6 +4,7 @@ using TaskSync.Application.Repository;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
 using TaskSync.Infrastructure.Interfaces;
+using TaskSync.Infrastructure.ValidationResponse;
 
 namespace TaskSync.Infrastructure.Implementations;
 
@@ -17,11 +18,11 @@ public class ProjectService : IProjectService
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
-        _projectRepo = unitOfWork.GetRepository<Project>();
+        _projectRepo = _unitOfWork.GetRepository<Project>();
         _userManager = userManager;
 
     }
-    public async Task<string> CreateProject(string userId, CreateProjectRequest request)
+    public async Task<SuccessResponse> CreateProject(string userId, CreateProjectRequest request)
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var user = _userManager.FindByIdAsync(userId);
@@ -32,7 +33,7 @@ public class ProjectService : IProjectService
         
         var result = _projectRepo.Create(project);
 
-        return $"{result.Name} has been created successfully";
+        return new SuccessResponse { Success = true, Data = $"{result.Name} has been created successfully" };
 
     }
 
@@ -87,6 +88,7 @@ public class ProjectService : IProjectService
         if (existingProject == null) throw new ArgumentException("Not Found!");
 
         _mapper.Map(request, existingProject);
+        existingProject.LastUpdated = DateTime.Now;
         _projectRepo.Update(existingProject);
     }
 }

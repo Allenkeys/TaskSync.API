@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
 using TaskSync.Infrastructure.Interfaces;
+using TaskSync.Infrastructure.ValidationResponse;
 
 namespace TaskSync.API.Controllers
 {
@@ -56,7 +57,7 @@ namespace TaskSync.API.Controllers
         [HttpDelete("delete-project/{projectId:int}", Name = "delete-project")]
         [SwaggerOperation(Summary = "Delete a user project")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "delete a project", Type = typeof(string))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
         public async Task<IActionResult> Delete(int projectId)
         {
