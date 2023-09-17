@@ -9,5 +9,6 @@ public class TicketMappingProfile : Profile
     public TicketMappingProfile()
     {
         CreateMap<CreateTicketRequest, Ticket>();
+        CreateMap<UpdateTicketRequest, Ticket>();
     }
 }

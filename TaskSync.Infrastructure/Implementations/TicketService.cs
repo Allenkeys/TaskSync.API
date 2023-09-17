@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using TaskSync.Application.Repository;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
+using TaskSync.Domain.Enums;
 using TaskSync.Infrastructure.Interfaces;
 using TaskSync.Infrastructure.ValidationResponse;
 
@@ -26,6 +27,7 @@ public class TicketService : ITicketService
     }
     public async Task<SuccessResponse> CreateTicket(string userId, CreateTicketRequest request)
     {
+        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _mapper.Map<Ticket>(request);
@@ -34,7 +36,7 @@ public class TicketService : ITicketService
         return new SuccessResponse { Success = true, Data = "Created" };
     }
 
-    public async Task DeleteTicket(string userId, UpdateTicketRequest request)
+    public async Task DeleteTicket(string userId, DeleteTicketRequest request)
     {
         var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
@@ -45,7 +47,6 @@ public class TicketService : ITicketService
             trackChanges: true);
 
         _ticketRepo.Delete(ticket);
-        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Ticket>> GetAllProjectTicketsAsync(string userId, int projectId)
@@ -67,18 +68,44 @@ public class TicketService : ITicketService
             trackChanges: false);
     }
 
-    public Task ToggleTickectPriority(string userId, UpdateTicketRequest request)
+    public async Task ToggleTickectPriority(string userId, TogglePriorityRequest request)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
+
+        var ticket = _ticketRepo.FindSingleBy(t =>
+            t.ProjectId.Equals(request.ProjectId)
+            && t.Id.Equals(request.TicketId),
+            trackChanges: true);
+
+        ticket.Priority = (Priority)request.PriorityId;
+        _ticketRepo.Update(ticket);
     }
 
-    public Task ToggleTicketStatus(string userId, UpdateTicketRequest request)
+    public async Task ToggleTicketStatus(string userId, ToggleStatusRequest request)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
+
+        var ticket = _ticketRepo.FindSingleBy(t =>
+            t.ProjectId.Equals(request.ProjectId)
+            && t.Id.Equals(request.TicketId),
+            trackChanges: true);
+        ticket.Status = (Status)request.StatusId;
+        _ticketRepo.Update(ticket);
     }
 
-    public Task UpdateTicket(string userId, UpdateTicketRequest request)
+    public async Task UpdateTicket(string userId, UpdateTicketRequest request)
     {
-        throw new NotImplementedException();
+        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
+
+        var ticket = _ticketRepo.FindSingleBy(t =>
+            t.ProjectId.Equals(request.ProjectId)
+            && t.Id.Equals(request.TicketId),
+            trackChanges: true);
+
+        var updatedTicket = _mapper.Map(request, ticket);
+        _ticketRepo.Update(ticket);
     }
 }
