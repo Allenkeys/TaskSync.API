@@ -17,7 +17,11 @@ public class Repository<T> : IRepository<T> where T : class
         return entity;
     }
 
-    public void Delete(T entity) => _dbContext.Set<T>().Remove(entity);
+    public void Delete(T entity)
+    {
+        _dbContext.Set<T>().Remove(entity);
+        _dbContext.SaveChanges();
+    }
 
     public T FindSingleBy(Expression<Func<T, bool>> predicate, bool trackChanges)
     {
@@ -38,6 +42,10 @@ public class Repository<T> : IRepository<T> where T : class
         return trackChanges ? _dbContext.Set<T>() : _dbContext.Set<T>().AsNoTracking();
     }
 
-    public void Update(T entity) => _dbContext.Set<T>().Update(entity);
+    public void Update(T entity)
+    {
+        _dbContext.Set<T>().Update(entity);
+        _dbContext.SaveChanges();
+    }
 
 }
