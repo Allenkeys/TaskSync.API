@@ -41,7 +41,7 @@ public class ProjectService : IProjectService
     {
         var user = _userManager.FindByIdAsync(userId);
         if (user == null) throw new ArgumentException("User not found");
-
+        
         var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId) 
             && x.UserId.Equals(userId), trackChanges: true);
 
