@@ -33,7 +33,7 @@ public class NotificationController : ControllerBase
     }
     
     [HttpPost("get-notification/{noticeId:int}", Name = "get-notification")]
-    [SwaggerOperation(Summary = "Mark a notification as read or unread")]
+    [SwaggerOperation(Summary = "Get all notifications")]
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a success message", Type = typeof(IEnumerable<Notification>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     public async Task<IActionResult> GetAll(int noticeId)
@@ -43,7 +43,7 @@ public class NotificationController : ControllerBase
     }
     
     [HttpPost("get-notifications/{noticeId:int}", Name = "get-all-notifications")]
-    [SwaggerOperation(Summary = "Mark a notification as read or unread")]
+    [SwaggerOperation(Summary = "Get a notification")]
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a success message", Type = typeof(Notification))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     public async Task<IActionResult> Get(int noticeId)

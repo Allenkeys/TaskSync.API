@@ -13,6 +13,7 @@ builder.Services.AddControllers(setup =>
 {
     setup.Filters.Add<ValidateModelAttribute>();
 });
+//builder.Services.AddBackgroundServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 

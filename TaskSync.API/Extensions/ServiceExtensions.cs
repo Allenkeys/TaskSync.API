@@ -31,6 +31,10 @@ namespace TaskSync.API.Extensions
             return services;
         }
 
+        public static void AddBackgroundServices(this IServiceCollection services)
+        {
+            services.AddHostedService<NotificationBackgroundService>();
+        }
         public static void ConfigureIdentity(this IServiceCollection services)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(opt =>
