@@ -17,6 +17,12 @@ public class Repository<T> : IRepository<T> where T : class
         return entity;
     }
 
+    public async Task CreateBulk(IList<T> entities)
+    {
+        await _dbContext.Set<T>().AddRangeAsync(entities);
+        _dbContext.SaveChanges();
+    }
+
     public void Delete(T entity)
     {
         _dbContext.Set<T>().Remove(entity);
