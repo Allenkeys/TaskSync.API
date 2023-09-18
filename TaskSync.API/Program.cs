@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 using TaskSync.API.Extensions;
 using TaskSync.API.Filters;
+using TaskSync.API.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,11 @@ builder.Services.AddControllers(setup =>
 {
     setup.Filters.Add<ValidateModelAttribute>();
 });
-//builder.Services.AddBackgroundServices();
+builder.Services.Configure<HostOptions>(setup =>
+{
+    setup.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+});
+builder.Services.AddBackgroundServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -66,13 +71,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-/*try
+try
 {
     await app.SeedAll();
 }
 catch (Exception)
 {
     throw;
-}*/
+}
 
 app.Run();

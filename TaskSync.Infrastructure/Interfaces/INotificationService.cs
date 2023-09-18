@@ -7,5 +7,7 @@ public interface INotificationService
 {
     Task<string> SendEmailNotification(string email);
     Task<string> SendEmailNotification(IEnumerable<string> emails);
+    Task CreateDueDateNotification();
+    Task CreateStatusNotification();
     Task<SuccessResponse> CreateNotification(string userId, CreateNotificationRequest request);
 }

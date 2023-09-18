@@ -10,5 +10,6 @@ public class Notification
     public string Content { get; set; }
     public string UserId { get; set; }
     public DateTime Created { get; set; } = DateTime.Now;
-    public ApplicationUser User { get; set; }
+    public int TicketId { get; set; }
+    public Ticket Ticket { get; set; }
 }

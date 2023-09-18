@@ -10,6 +10,7 @@ public class Ticket : BaseEntity
     public DateTime DueDate { get; set; }
     public Priority Priority { get; set; }
     public Status Status { get; set; }
+    public ICollection<Notification> Notifications { get; set; }
     public int ProjectId { get; set; }
     public Project Project { get; set; }
 }
