@@ -40,7 +40,7 @@ Packager Manager : Update-Database
 ```
 dotnet run
 ```
-The API should be accessible at http://localhost:5000 (or https://localhost:5001 for HTTPS) .
+The API should be accessible at http://localhost:5000 (or https://localhost:5001 for HTTPS).
 
 ## API Endpoints
 For detailed information about available API endpoints and their usage, refer to the API Documentation section or navigate to /swagger when the API is running locally.
@@ -54,6 +54,14 @@ API documentation can be found at /swagger when the API is running locally. For 
 
 ## Security
 This project follows security best practices to protect against common vulnerabilities. Regularly update dependencies to address security concerns.
+
+## Authors
+
+👤 **Joshua Eze**
+
+- GitHub: [@Allenkeys](https://github.com/Allenkeys)
+- Twitter: [@jdgraay](https://twitter.com/jdgraay)
+- LinkedIn: [Eze Joshua](https://linkedin.com/in/eze-joshua)
 
 ## Contributing
 Contributions are welcome! 
