@@ -3,7 +3,7 @@
 
 A Task Management System developed using ASP.NET Core to efficiently organize, track, and manage tasks. Seamlessly handle assignments, deadlines, and progress monitoring. Enhance productivity and streamline workflows effortlessly.
 
-## Features
+## Deliverables
 + Task Management: Create, update, delete, and retrieve.
 + Project Management: Organize tasks into projects, enabling better organization and tracking.
 + Notifications: Receive notifications for task assignments, deadlines, and other important events.
@@ -13,9 +13,11 @@ A Task Management System developed using ASP.NET Core to efficiently organize, t
 + Validation: Input data validation to ensure data integrity.
 + Documentation: API documentation for easy integration using Swagger.
 
-## Prerequisites
-Before you begin, ensure you have met the following requirements:
+## Technology
++ ASP.NET Core 6.0
++ Entity Framework Core 6.0.22
 
+## Prerequisites
 +  .NET 6 SDK
 +  Visual Studio
  
