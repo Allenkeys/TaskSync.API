@@ -1,7 +1,7 @@
 # Task Management API | TaskSync
 
 
-Task Management API is a backend solution built using ASP.NET Core that allows users to create, manage, and track tasks, projects, and receive notifications. This README provides an overview of the API, its features, and instructions on how to get started.
+A Task Management System developed using ASP.NET Core to efficiently organize, track, and manage tasks. Seamlessly handle assignments, deadlines, and progress monitoring. Enhance productivity and streamline workflows effortlessly.
 
 ## Features
 + Task Management: Create, update, delete, and retrieve.
