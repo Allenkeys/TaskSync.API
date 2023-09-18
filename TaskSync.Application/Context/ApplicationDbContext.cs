@@ -11,12 +11,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<ApplicationUser>()
-            .HasQueryFilter(x => x.Active);
-
     }
 
     public virtual DbSet<Project> Projects { get; set; }
-    public virtual DbSet<Ticket> Ticket { get; set; }
+    public virtual DbSet<Ticket> Tickets { get; set; }
+    public virtual DbSet<Notification> Notifications { get; set; }
 }

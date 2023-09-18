@@ -14,10 +14,10 @@ builder.Services.AddControllers(setup =>
 {
     setup.Filters.Add<ValidateModelAttribute>();
 });
-builder.Services.Configure<HostOptions>(setup =>
+/*builder.Services.Configure<HostOptions>(setup =>
 {
     setup.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
-});
+});*/
 builder.Services.AddBackgroundServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using TaskSync.Domain.Entities;
 
 namespace TaskSync.Application.Repository;
 public class Repository<T> : IRepository<T> where T : class
@@ -53,5 +54,4 @@ public class Repository<T> : IRepository<T> where T : class
         _dbContext.Set<T>().Update(entity);
         _dbContext.SaveChanges();
     }
-
 }

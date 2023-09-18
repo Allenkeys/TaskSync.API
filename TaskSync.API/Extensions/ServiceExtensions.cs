@@ -26,6 +26,8 @@ namespace TaskSync.API.Extensions
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<INoticeEngagementService, NotificationEngagementService>();
+            services.AddSingleton<INotificationService, NotificationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
 
             return services;

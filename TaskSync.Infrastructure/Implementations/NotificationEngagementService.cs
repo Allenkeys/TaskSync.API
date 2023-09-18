@@ -6,7 +6,7 @@ using TaskSync.Infrastructure.Interfaces;
 
 namespace TaskSync.Infrastructure.Implementations;
 
-internal class NotificationEngagementService : INoticeEngagementService
+public class NotificationEngagementService : INoticeEngagementService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<Notification> _noticeRepo;

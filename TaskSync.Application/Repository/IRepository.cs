@@ -12,5 +12,4 @@ public interface IRepository<T>
     void Delete(T entity);
     T FindSingleBy(Expression<Func<T, bool>> predicate, bool trackChanges);
     IQueryable<T> FindBy(Expression<Func<T, bool>> predicate, bool trackChanges);
-    void BulkCreate(IList<Notification>? notifications);
 }

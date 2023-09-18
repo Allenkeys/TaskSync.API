@@ -24,7 +24,7 @@ public class ProjectController : ControllerBase
     [SwaggerOperation(Summary = "Create a new project")]
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a success message", Type = typeof(string))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
-    public async Task<IActionResult> Create(CreateProjectRequest request)
+    public async Task<IActionResult> Create([FromForm]CreateProjectRequest request)
     {
         var response = await _projectService.CreateProject(_userId, request);
         return Ok(response);

@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TaskSync.Application.Context;
 using TaskSync.Application.Repository;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
@@ -11,39 +14,26 @@ namespace TaskSync.Infrastructure.Implementations;
 
 public class NotificationService : INotificationService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IRepository<Notification> _noticeRepo;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IRepository<Ticket> _ticketRepo;
-    private readonly IMapper _mapper;
+    private readonly IServiceProvider _serviceProvider;
 
-    public NotificationService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper)
+    public NotificationService(IServiceProvider provider)
     {
-        _unitOfWork = unitOfWork;
-        _userManager = userManager;
-        _noticeRepo = _unitOfWork.GetRepository<Notification>();
+        _serviceProvider = provider;
     }
-    public async Task<SuccessResponse> CreateNotification(string userId, CreateNotificationRequest request)
-    {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
-        var notification = _mapper.Map<Notification>(request);
-        notification.UserId = userId;
 
-        _noticeRepo.Create(notification);
-
-        return new SuccessResponse { Success = true, Data = "Created" };
-    }
 
     public async Task CreateDueDateNotification()
     {
-        var dueTickets = _ticketRepo.FindBy(t => t.DueDate.Equals(DateTime.Now.AddDays(-2)) 
-            && t.Notifications.Any(x => x.NotificationTypeId != NotificationType.DueDate), 
-            trackChanges: true);
+        var ticketRepo = _serviceProvider.GetRequiredService<ApplicationDbContext>().Tickets;
+        var noticeRepo = _serviceProvider.GetRequiredService<ApplicationDbContext>().Notifications;
+
+        var dueTickets = ticketRepo.Where(t => t.DueDate.Equals(DateTime.Now.AddDays(-2))
+            && t.Notifications.Any(x => x.NotificationTypeId != NotificationType.DueDate)).AsNoTracking();
         if (dueTickets == null) return;
 
         IList<Notification> notifications = null;
 
-        foreach(var ticket in dueTickets)
+        foreach (var ticket in dueTickets)
         {
             notifications.Add(new Notification
             {
@@ -55,14 +45,21 @@ public class NotificationService : INotificationService
             });
         }
 
-        _ticketRepo.BulkCreate(notifications);
+        await noticeRepo.AddRangeAsync(notifications);
+    }
+
+    public Task<SuccessResponse> CreateNotification(string userId, CreateNotificationRequest request)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task CreateStatusNotification()
     {
-        var dueTickets = _ticketRepo.FindBy(t => t.Status.Equals(Status.Completed)
-           && t.Notifications.Any(x => x.NotificationTypeId != NotificationType.StatusUpdate),
-           trackChanges: true);
+        var ticketRepo = _serviceProvider.GetRequiredService<ApplicationDbContext>().Tickets;
+        var noticeRepo = _serviceProvider.GetRequiredService<ApplicationDbContext>().Notifications;
+
+        var dueTickets = ticketRepo.Where(t => t.Status.Equals(Status.Completed)
+           && t.Notifications.Any(x => x.NotificationTypeId != NotificationType.StatusUpdate)).AsNoTracking();
         if (dueTickets == null) return;
 
         IList<Notification> notifications = null;
@@ -79,7 +76,7 @@ public class NotificationService : INotificationService
             });
         }
 
-        _ticketRepo.BulkCreate(notifications);
+        await noticeRepo.AddRangeAsync(notifications);
     }
 
     public Task<string> SendEmailNotification(string email)

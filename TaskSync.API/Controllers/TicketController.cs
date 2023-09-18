@@ -25,7 +25,7 @@ public class TicketController : ControllerBase
     [SwaggerOperation(Summary = "Create a new ticket")]
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a success message", Type = typeof(SuccessResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
-    public async Task<IActionResult> Create(CreateTicketRequest request)
+    public async Task<IActionResult> Create([FromForm] CreateTicketRequest request)
     {
         var response = _ticketService.CreateTicket(_userId, request);
         return Ok(response);
@@ -36,7 +36,7 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns ticket details", Type = typeof(Ticket))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Not found!", Type = typeof(NotFoundResult))]
-    public async Task<IActionResult> Get(GetTicketRequest request)
+    public async Task<IActionResult> Get([FromForm]GetTicketRequest request)
     {
         var response = _ticketService.GetTicket(_userId, request);
         if (response == null)
@@ -82,7 +82,7 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "delete a ticket", Type = typeof(string))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(ErrorResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
-    public async Task<IActionResult> Delete(DeleteTicketRequest request)
+    public async Task<IActionResult> Delete([FromForm] DeleteTicketRequest request)
     {
         var response = _ticketService.DeleteTicket(_userId, request);
         return Ok(response);
@@ -93,7 +93,7 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns nothing", Type = typeof(string))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
-    public async Task<IActionResult> Update(UpdateTicketRequest request)
+    public async Task<IActionResult> Update([FromForm] UpdateTicketRequest request)
     {
         var response = _ticketService.UpdateTicket(_userId, request);
         return Ok(response);
@@ -104,7 +104,7 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns nothing", Type = typeof(string))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
-    public async Task<IActionResult> MoveTicket(MoveTicketRequest request)
+    public async Task<IActionResult> MoveTicket([FromForm] MoveTicketRequest request)
     {
         var response = _ticketService.MovedTicket(_userId, request);
         return Ok(response);
