@@ -24,11 +24,11 @@ public class NotificationEngagementService : INoticeEngagementService
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<Notification>> GetAllNotifications(string userId, int noticeId)
+    public async Task<IEnumerable<Notification>> GetAllNotifications(string userId)
     {
         var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
-        var notifications = _noticeRepo.FindBy(n => n.UserId.Equals(userId)
-            && n.NotificationId.Equals(noticeId), trackChanges: false);
+        var notifications = _noticeRepo.FindBy(n => n.UserId.Equals(userId),
+            trackChanges: false);
         if(notifications  == null) return Enumerable.Empty<Notification>();
 
         return notifications;
