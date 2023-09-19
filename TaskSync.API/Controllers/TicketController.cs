@@ -8,7 +8,7 @@ using TaskSync.Infrastructure.ValidationResponse;
 
 namespace TaskSync.API.Controllers;
 
-[Route("api/project/{projectId}/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class TicketController : ControllerBase
 {
@@ -49,9 +49,9 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a collection of tickets", Type = typeof(IEnumerable<Ticket>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
-    public async Task<IActionResult> GetAll(int projectId)
+    public async Task<IActionResult> GetAll(GetTicketRequest request)
     {
-        var response = _ticketService.GetAllProjectTicketsAsync(_userId, projectId);
+        var response = _ticketService.GetAllProjectTicketsAsync(_userId, request);
         return Ok(response);
     }
 
@@ -60,9 +60,9 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a collection of tickets", Type = typeof(IEnumerable<Ticket>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
-    public async Task<IActionResult> GetAll(int projectId, int statusId)
+    public async Task<IActionResult> GetAllByStatus(GetTicketRequest request)
     {
-        var response = _ticketService.GetTicketByStatus(_userId, projectId, statusId);
+        var response = _ticketService.GetTicketByStatus(_userId, request);
         return Ok(response);
     }
 
@@ -71,9 +71,9 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a collection of tickets", Type = typeof(IEnumerable<Ticket>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
-    public async Task<IActionResult> GetAll(int projectId, DateTime date)
+    public async Task<IActionResult> GetAllByDate(GetTicketRequest request)
     {
-        var response = _ticketService.GetTicketByDueDate(_userId, projectId, date);
+        var response = _ticketService.GetTicketByDueDate(_userId, request);
         return Ok(response);
     }
 
