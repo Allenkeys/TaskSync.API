@@ -1,9 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
-using TaskSync.Infrastructure.Implementations;
 using TaskSync.Infrastructure.Interfaces;
 using TaskSync.Infrastructure.ValidationResponse;
 
@@ -31,17 +29,17 @@ public class NotificationController : ControllerBase
         var response = _noticeEngagementService.ToggleRead(_userId, noticeId);
         return Ok();
     }
-    
-    [HttpPost("get-notification/{noticeId:int}", Name = "get-notification")]
+
+    [HttpPost("get-notification", Name = "get-notification")]
     [SwaggerOperation(Summary = "Get all notifications")]
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a success message", Type = typeof(IEnumerable<Notification>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
     public async Task<IActionResult> GetAll(int noticeId)
     {
-        var response = _noticeEngagementService.GetAllNotifications(_userId, noticeId);
+        var response = _noticeEngagementService.GetAllNotifications(_userId);
         return Ok(response);
     }
-    
+
     [HttpPost("get-notifications/{noticeId:int}", Name = "get-all-notifications")]
     [SwaggerOperation(Summary = "Get a notification")]
     [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a success message", Type = typeof(Notification))]

@@ -73,18 +73,18 @@ public class TicketService : ITicketService
         return ticket;
     }
 
-    public async Task<IEnumerable<Ticket>> GetTicketByDueDate(string userId, GetTicketRequest request)
+    public async Task<IEnumerable<Ticket>> GetTicketByDate(string userId, GetTicketRequest request)
     {
         var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId) 
-        &&t.DueDate.Equals(request.DueDate), 
+        && t.Created.Equals(request.Date), 
         trackChanges: false);
 
         if (tickets == null) return Enumerable.Empty<Ticket>();
 
-        return tickets;
+        return tickets.OrderBy(t => t.Created);
     }
 
     public async Task<IEnumerable<Ticket>> GetTicketByStatus(string userId, GetTicketRequest request)
@@ -94,6 +94,20 @@ public class TicketService : ITicketService
 
         var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId)
         && t.Status.Equals(request.TicketStatusId),
+        trackChanges: false);
+
+        if (tickets == null) return Enumerable.Empty<Ticket>();
+
+        return tickets;
+    }
+
+    public async Task<IEnumerable<Ticket>> GetTicketDueInCurrentWeek(string userId, GetTicketRequest request)
+    {
+        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
+
+        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId)
+        && t.DueDate >= t.DueDate && t.DueDate <= DateTime.Now.AddDays(7),
         trackChanges: false);
 
         if (tickets == null) return Enumerable.Empty<Ticket>();

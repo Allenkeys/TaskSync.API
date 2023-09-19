@@ -7,5 +7,5 @@ public interface INoticeEngagementService
 {
     Task ToggleRead(string userId, int noticeId);
     Task<Notification> GetNotification(string userId, int noticeId);
-    Task<IEnumerable<Notification>> GetAllNotifications(string userId, int noticeId);
+    Task<IEnumerable<Notification>> GetAllNotifications(string userId);
 }

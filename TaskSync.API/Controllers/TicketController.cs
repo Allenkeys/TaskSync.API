@@ -73,7 +73,18 @@ public class TicketController : ControllerBase
     [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
     public async Task<IActionResult> GetAllByDate(GetTicketRequest request)
     {
-        var response = _ticketService.GetTicketByDueDate(_userId, request);
+        var response = _ticketService.GetTicketByDate(_userId, request);
+        return Ok(response);
+    }
+    
+    [HttpGet("get-tickets-due-in-week", Name = "get-tickets-due-in-week")]
+    [SwaggerOperation(Summary = "Get a collection of tickets by date")]
+    [SwaggerResponse(StatusCodes.Status200OK, Description = "returns a collection of tickets", Type = typeof(IEnumerable<Ticket>))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "You did something wrong!", Type = typeof(BadRequestResult))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Description = "Sorry no records!", Type = typeof(EmptyResult))]
+    public async Task<IActionResult> GetAllDueInWeek(GetTicketRequest request)
+    {
+        var response = _ticketService.GetTicketDueInCurrentWeek(_userId, request);
         return Ok(response);
     }
 

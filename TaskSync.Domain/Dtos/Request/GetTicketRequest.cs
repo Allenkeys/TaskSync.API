@@ -8,6 +8,6 @@ public class GetTicketRequest
     public int ProjectId { get; set; }
     [Required]
     public int TicketId { get; set; }
-    public DateTime? DueDate { get; set; }
+    public DateTime? Date { get; set; }
     public int TicketStatusId { get; set; }
 }
