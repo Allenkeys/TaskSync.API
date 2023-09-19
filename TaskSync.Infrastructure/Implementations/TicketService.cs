@@ -50,16 +50,15 @@ public class TicketService : ITicketService
         _ticketRepo.Delete(ticket);
     }
 
-    public async Task<IEnumerable<Ticket>> GetAllProjectTicketsAsync(string userId, int projectId)
+    public async Task<IEnumerable<Ticket>> GetAllProjectTicketsAsync(string userId, GetTicketRequest request)
     {
         var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
-        var project = _projectService.GetProject(userId, projectId) ?? throw new ArgumentException("Project does not exist");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
-        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(projectId), trackChanges: false);
+        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId), trackChanges: false);
         if (tickets == null) return Enumerable.Empty<Ticket>();
 
         return tickets;
-
     }
 
     public async Task<Ticket> GetTicket(string userId, GetTicketRequest request)
@@ -74,13 +73,13 @@ public class TicketService : ITicketService
         return ticket;
     }
 
-    public async Task<IEnumerable<Ticket>> GetTicketByDueDate(string userId, int projectId, DateTime dateTime)
+    public async Task<IEnumerable<Ticket>> GetTicketByDueDate(string userId, GetTicketRequest request)
     {
         var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
-        var project = _projectService.GetProject(userId, projectId) ?? throw new ArgumentException("Project does not exist");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
-        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(projectId) 
-        &&t.DueDate.Equals(dateTime), 
+        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId) 
+        &&t.DueDate.Equals(request.DueDate), 
         trackChanges: false);
 
         if (tickets == null) return Enumerable.Empty<Ticket>();
@@ -88,18 +87,18 @@ public class TicketService : ITicketService
         return tickets;
     }
 
-    public async Task<IEnumerable<Ticket>> GetTicketByStatus(string userId, int projectId, int statusId)
+    public async Task<IEnumerable<Ticket>> GetTicketByStatus(string userId, GetTicketRequest request)
     {
         var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
-        var project = _projectService.GetProject(userId, projectId) ?? throw new ArgumentException("Project does not exist");
+        var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
-        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(projectId)
-        && t.Status.Equals(statusId),
+        var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId)
+        && t.Status.Equals(request.TicketStatusId),
         trackChanges: false);
 
         if (tickets == null) return Enumerable.Empty<Ticket>();
 
-        return tickets;
+        return tickets.OrderBy(t => t.DueDate);
     }
 
     public async Task MovedTicket(string userId, MoveTicketRequest request)

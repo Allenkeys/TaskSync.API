@@ -6,7 +6,8 @@ namespace TaskSync.Infrastructure.Implementations;
 public class NotificationBackgroundService : IHostedService, IDisposable
 {
     private readonly INotificationService _notificationService;
-    private Timer _timer;
+    private Timer _statusTimer;
+    private Timer _dateTimer;
     public NotificationBackgroundService(INotificationService notificationService)
     {
         _notificationService = notificationService;
@@ -14,24 +15,31 @@ public class NotificationBackgroundService : IHostedService, IDisposable
    
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(Notify, null, TimeSpan.Zero, TimeSpan.FromDays(1));
+        _dateTimer = new Timer(DueDateNotify, null, TimeSpan.Zero, TimeSpan.FromDays(1));
+        _statusTimer = new Timer(StatusNotify, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _timer?.Change(Timeout.Infinite, 0);
+        _statusTimer?.Change(Timeout.Infinite, 0);
+        _dateTimer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
     }
 
-    private void Notify(object state)
+    private void StatusNotify(object state)
     {
         _notificationService.CreateStatusNotification();
+    }
+
+    private void DueDateNotify(object state)
+    {
         _notificationService.CreateDueDateNotification();
     }
 
     public void Dispose()
     {
-        _timer?.Dispose();
+        _dateTimer?.Dispose();
+        _statusTimer?.Dispose();
     }
 }
