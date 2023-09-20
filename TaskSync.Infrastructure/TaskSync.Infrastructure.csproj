@@ -16,8 +16,4 @@
     <ProjectReference Include="..\TaskSync.Application\TaskSync.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CustomExceptions\" />
-  </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using TaskSync.Infrastructure.CustomExceptions;
 using TaskSync.Infrastructure.ValidationResponse;
 
 namespace TaskSync.API.Extensions
@@ -23,6 +24,7 @@ namespace TaskSync.API.Extensions
                             case InvalidOperationException:
                             case InvalidDataException:
                             case KeyNotFoundException:
+                            case UserNotFoundException:
                             case ArgumentException:
                                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                                 break;

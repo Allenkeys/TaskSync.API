@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using TaskSync.Application.Repository;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
+using TaskSync.Infrastructure.CustomExceptions;
 using TaskSync.Infrastructure.Interfaces;
 using TaskSync.Infrastructure.ValidationResponse;
 
@@ -26,7 +27,7 @@ public class ProjectService : IProjectService
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var user = _userManager.FindByIdAsync(userId);
-        if (user == null) throw new ArgumentException("User not found");
+        if (user == null) throw new UserNotFoundException(userId);
 
         var project = _mapper.Map<Project>(request);
         project.UserId = userId;
@@ -40,7 +41,7 @@ public class ProjectService : IProjectService
     public async Task DeleteProject(string userId, int projectId)
     {
         var user = _userManager.FindByIdAsync(userId);
-        if (user == null) throw new ArgumentException("User not found");
+        if (user == null) throw new UserNotFoundException(userId);
         
         var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId) 
             && x.UserId.Equals(userId), trackChanges: true);
@@ -53,7 +54,7 @@ public class ProjectService : IProjectService
     public async Task<IEnumerable<Project>> GetAllProjectsAsync(string userId)
     {
         var user = _userManager.FindByIdAsync(userId);
-        if (user == null) throw new ArgumentException("User not found");
+        if (user == null) throw new UserNotFoundException(userId);
 
         var existingProjects = _projectRepo.FindBy(x => x.UserId.Equals(userId) 
             && x.UserId.Equals(userId), trackChanges: false);
@@ -67,7 +68,7 @@ public class ProjectService : IProjectService
     public async Task<Project> GetProject(string userId, int projectId)
     {
         var user = _userManager.FindByIdAsync(userId);
-        if (user == null) throw new ArgumentException("User not found");
+        if (user == null) throw new UserNotFoundException(userId);
 
         var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId) 
             && x.UserId.Equals(userId), trackChanges: false);
@@ -80,7 +81,7 @@ public class ProjectService : IProjectService
     public async Task UpdateProject(string userId, int projectId, UpdateProjectRequest request)
     {
         var user = _userManager.FindByIdAsync(userId);
-        if (user == null) throw new ArgumentException("User not found");
+        if (user == null) throw new UserNotFoundException(userId);
 
         var existingProject = _projectRepo.FindSingleBy(x => x.Id.Equals(projectId)
             && x.UserId.Equals(userId), trackChanges: true);

@@ -5,6 +5,7 @@ using TaskSync.Application.Repository;
 using TaskSync.Domain.Dtos.Request;
 using TaskSync.Domain.Entities;
 using TaskSync.Domain.Enums;
+using TaskSync.Infrastructure.CustomExceptions;
 using TaskSync.Infrastructure.Interfaces;
 using TaskSync.Infrastructure.ValidationResponse;
 
@@ -28,7 +29,7 @@ public class TicketService : ITicketService
     }
     public async Task<SuccessResponse> CreateTicket(string userId, CreateTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _mapper.Map<Ticket>(request);
@@ -39,7 +40,7 @@ public class TicketService : ITicketService
 
     public async Task DeleteTicket(string userId, DeleteTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _ticketRepo.FindSingleBy(t =>
@@ -52,7 +53,7 @@ public class TicketService : ITicketService
 
     public async Task<IEnumerable<Ticket>> GetAllProjectTicketsAsync(string userId, GetTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId), trackChanges: false);
@@ -63,7 +64,7 @@ public class TicketService : ITicketService
 
     public async Task<Ticket> GetTicket(string userId, GetTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _ticketRepo.FindSingleBy(t => 
@@ -75,7 +76,7 @@ public class TicketService : ITicketService
 
     public async Task<IEnumerable<Ticket>> GetTicketByDate(string userId, GetTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId) 
@@ -89,7 +90,7 @@ public class TicketService : ITicketService
 
     public async Task<IEnumerable<Ticket>> GetTicketByStatus(string userId, GetTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId)
@@ -103,7 +104,7 @@ public class TicketService : ITicketService
 
     public async Task<IEnumerable<Ticket>> GetTicketDueInCurrentWeek(string userId, GetTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var tickets = _ticketRepo.FindBy(t => t.ProjectId.Equals(request.ProjectId)
@@ -117,7 +118,7 @@ public class TicketService : ITicketService
 
     public async Task MovedTicket(string userId, MoveTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.CurrentProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _ticketRepo.FindSingleBy(t =>
@@ -131,7 +132,7 @@ public class TicketService : ITicketService
 
     public async Task ToggleTickectPriority(string userId, TogglePriorityRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _ticketRepo.FindSingleBy(t =>
@@ -145,7 +146,7 @@ public class TicketService : ITicketService
 
     public async Task ToggleTicketStatus(string userId, ToggleStatusRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _ticketRepo.FindSingleBy(t =>
@@ -158,7 +159,7 @@ public class TicketService : ITicketService
 
     public async Task UpdateTicket(string userId, UpdateTicketRequest request)
     {
-        var user = _userManager.FindByIdAsync(userId) ?? throw new ArgumentException("User not found");
+        var user = _userManager.FindByIdAsync(userId) ?? throw new UserNotFoundException(userId);
         var project = _projectService.GetProject(userId, request.ProjectId) ?? throw new ArgumentException("Project does not exist");
 
         var ticket = _ticketRepo.FindSingleBy(t =>
